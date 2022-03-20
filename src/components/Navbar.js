@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Avatar,
@@ -23,6 +23,7 @@ function Navbar() {
   const { user } = UserState();
 
   const navigate = useNavigate();
+
   const logoutHandler = () => {
     localStorage.removeItem("userInfo");
     localStorage.removeItem("selectedTheatre");
@@ -31,39 +32,43 @@ function Navbar() {
 
   return (
     <>
-      <Box
-        d="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        bg="white"
-        w="100%"
-        p="5px 10px 5px 10px"
-        borderWidth="5px"
-      >
-        <Link to="/home">
-          <Avatar size="sm" cursor="pointer" />
-        </Link>
+      {user && (
+        <Box
+          d="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          bg="white"
+          w="100%"
+          p="5px 10px 5px 10px"
+          borderWidth="5px"
+        >
+          <Link to="/home">Home</Link>
 
-        <Text fontSize="2xl" fontFamily="Work sans">
-          Book My Show
-        </Text>
+          <Text fontSize="2xl" fontFamily="Work sans">
+            Book My Show
+          </Text>
 
-        <div>
-          <Menu>
-            <MenuButton as={Button} bg="white" rightIcon={<ChevronDownIcon />}>
-              <Avatar size="sm" cursor="pointer" />
-            </MenuButton>
-            <MenuList>
-              <MenuItem onClick={logoutHandler}>Logout</MenuItem>
-              {user && user.isAdmin && (
-                <Link to="/admin">
-                  <MenuItem>Admin</MenuItem>
-                </Link>
-              )}
-            </MenuList>
-          </Menu>
-        </div>
-      </Box>
+          <div>
+            <Menu>
+              <MenuButton
+                as={Button}
+                bg="white"
+                rightIcon={<ChevronDownIcon />}
+              >
+                <Avatar size="sm" cursor="pointer" />
+              </MenuButton>
+              <MenuList>
+                <MenuItem onClick={logoutHandler}>Logout</MenuItem>
+                {user.isAdmin && (
+                  <Link to="/admin">
+                    <MenuItem>Admin</MenuItem>
+                  </Link>
+                )}
+              </MenuList>
+            </Menu>
+          </div>
+        </Box>
+      )}
 
       <SideDrawer isOpen={isOpen} onClose={onClose} />
     </>

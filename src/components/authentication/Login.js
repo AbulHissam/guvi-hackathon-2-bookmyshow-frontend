@@ -5,12 +5,10 @@ import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { VStack } from "@chakra-ui/layout";
 import axios from "axios";
-import { useToast } from "@chakra-ui/react";
+import { useToast, Box } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
 const baseUrl = process.env.REACT_APP_BASE_URL;
-
-console.log(baseUrl);
 
 function Login() {
   const navigate = useNavigate();
@@ -49,18 +47,16 @@ function Login() {
         },
         config
       );
-      if (data) {
-        setLoading(false);
-        toast({
-          title: "Login Successful",
-          status: "success",
-          duration: 2000,
-          isClosable: true,
-          position: "bottom",
-        });
-        localStorage.setItem("userInfo", JSON.stringify(data));
-        navigate("/home");
-      }
+      setLoading(false);
+      toast({
+        title: "Login Successful",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+        position: "bottom",
+      });
+      localStorage.setItem("userInfo", JSON.stringify(data));
+      navigate("/home");
     } catch (err) {
       toast({
         title: "Login failed",
@@ -110,6 +106,30 @@ function Login() {
       >
         Login
       </Button>
+      <Box w="100%" d="flex" gap={10}>
+        <Button
+          colorScheme="red"
+          width="100%"
+          style={{ marginTop: 15 }}
+          onClick={() => {
+            setEmail("guestadminm@test.com");
+            setPassword("qwertyuiop");
+          }}
+        >
+          Get Guest Admin credentials
+        </Button>
+        <Button
+          colorScheme="red"
+          width="100%"
+          style={{ marginTop: 15 }}
+          onClick={() => {
+            setEmail("guestuser@test.com");
+            setPassword("qwertyuiop");
+          }}
+        >
+          Get Guest User credentials
+        </Button>
+      </Box>
     </VStack>
   );
 }
