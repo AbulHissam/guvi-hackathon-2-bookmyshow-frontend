@@ -37,6 +37,11 @@ const Show = () => {
               {selectedTheatre.name.toUpperCase()}
             </Text>
             <Box>
+              {films && films.length === 0 && (
+                <Text textAlign="center" m={2}>
+                  No shows Available
+                </Text>
+              )}
               {films &&
                 films.map((film) => {
                   return (

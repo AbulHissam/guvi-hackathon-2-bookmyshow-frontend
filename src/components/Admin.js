@@ -16,13 +16,15 @@ import { useToast } from "@chakra-ui/react";
 import axios from "axios";
 import { UserState } from "../context/ContextProvider";
 import Navbar from "./Navbar";
+import { useNavigate } from "react-router-dom";
 
 const baseUrl = process.env.REACT_APP_BASE_URL;
 
 const Admin = () => {
-  const [loading, setLoading] = useState(false);
-
   const toast = useToast();
+  const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
 
   const [theatres, setTheatres] = useState([]);
   const [films, setFilms] = useState([]);
@@ -35,7 +37,102 @@ const Admin = () => {
   const [selectedTheatreForFilmAssign, setSelectedTheatreForFilmAssign] =
     useState("");
 
+  const [theatreToCreate, setTheatreToCreate] = useState("");
+  const [filmToCreate, setFilmToCreate] = useState("");
+
   const { user, selectedTheatre } = UserState();
+
+  const handleCreateTheatre = async () => {
+    if (!theatreToCreate) {
+      toast({
+        title: "please fill all the fields",
+        status: "warning",
+        duration: 2000,
+        isClosable: true,
+      });
+      return;
+    }
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        `${baseUrl}/api/v1/theatre`,
+        {
+          name: filmToCreate,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+      if (response.status) {
+        setLoading(false);
+        toast({
+          title: "Theatre created successfuly",
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
+        navigate("/home");
+      }
+    } catch (err) {
+      setLoading(false);
+      toast({
+        title: `${err.message}`,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+      console.error(err);
+    }
+  };
+
+  const handleCreateFilm = async () => {
+    if (!filmToCreate) {
+      toast({
+        title: "please fill all the fields",
+        status: "warning",
+        duration: 2000,
+        isClosable: true,
+      });
+      return;
+    }
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        `${baseUrl}/api/v1/film`,
+        {
+          name: filmToCreate,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+      if (response.status) {
+        setLoading(false);
+        toast({
+          title: "Film created successfuly",
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
+        navigate("/home");
+      }
+    } catch (err) {
+      setLoading(false);
+      toast({
+        title: `${err.message}`,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+      console.error(err);
+    }
+  };
 
   const handleFilmAssign = async () => {
     if (
@@ -52,6 +149,7 @@ const Admin = () => {
       return;
     }
     try {
+      setLoading(true);
       const response = await axios.put(
         `${baseUrl}/api/v1/film/assignToTheatre`,
         {
@@ -67,6 +165,7 @@ const Admin = () => {
         }
       );
       if (response.status) {
+        setLoading(false);
         toast({
           title: "Film assigned successfuly",
           status: "success",
@@ -78,6 +177,7 @@ const Admin = () => {
         setSelectedShowForFilmAssign("");
       }
     } catch (err) {
+      setLoading(false);
       console.log(err);
       toast({
         title: "Failed to assign",
@@ -145,34 +245,49 @@ const Admin = () => {
           </TabList>
 
           <TabPanels>
+            {/* Create Theatre */}
             <TabPanel>
-              <FormControl isRequired>
+              <FormControl>
                 <FormLabel>Theatre</FormLabel>
-                <Input placeholder="Theatre name" />
+                <Input
+                  placeholder="Theatre name"
+                  value={theatreToCreate}
+                  onChange={(e) => setTheatreToCreate(e.target.value)}
+                />
                 <Button
                   mt={4}
                   colorScheme="teal"
                   isLoading={loading}
                   type="submit"
+                  onClick={handleCreateTheatre}
                 >
                   Create
                 </Button>
               </FormControl>
             </TabPanel>
+
+            {/* Create film */}
             <TabPanel>
               <FormControl isRequired>
                 <FormLabel>Film</FormLabel>
-                <Input placeholder="Film name" />
+                <Input
+                  placeholder="Film name"
+                  value={filmToCreate}
+                  onChange={(e) => setFilmToCreate(e.target.value)}
+                />
                 <Button
                   mt={4}
                   colorScheme="teal"
                   isLoading={loading}
                   type="submit"
+                  onClick={handleCreateFilm}
                 >
                   Create
                 </Button>
               </FormControl>
             </TabPanel>
+
+            {/* Assign Film to theatre */}
             <TabPanel>
               <FormControl>
                 <FormLabel htmlFor="theatre">Theatre</FormLabel>
