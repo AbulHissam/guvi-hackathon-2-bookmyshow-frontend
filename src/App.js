@@ -2,7 +2,6 @@ import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import AuthPage from "./pages/AuthPage";
 import HomePage from "./pages/HomePage";
-import Theatre from "./components/Theatre";
 import Navbar from "./components/Navbar";
 import Show from "./components/Show";
 import Admin from "./components/Admin";
@@ -10,7 +9,6 @@ import Admin from "./components/Admin";
 function App() {
   return (
     <>
-      <Navbar />
       <Routes>
         <Route path="/" element={<AuthPage />} />
         <Route path="/home" element={<HomePage />} />

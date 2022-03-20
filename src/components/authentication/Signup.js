@@ -7,6 +7,8 @@ import { useToast } from "@chakra-ui/toast";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+const baseUrl = process.env.REACT_APP_BASE_URL;
+
 function Signup() {
   const navigate = useNavigate();
   const toast = useToast();
@@ -51,7 +53,7 @@ function Signup() {
         },
       };
       const { data } = await axios.post(
-        "/api/v1/auth/signup",
+        `${baseUrl}/api/v1/auth/signup`,
         {
           name,
           email,
