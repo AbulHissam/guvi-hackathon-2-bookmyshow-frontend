@@ -15,6 +15,10 @@ import {
 import { useToast } from "@chakra-ui/react";
 import axios from "axios";
 import { UserState } from "../context/ContextProvider";
+import Navbar from "./Navbar";
+
+const baseUrl = process.env.REACT_APP_BASE_URL;
+
 const Admin = () => {
   const [loading, setLoading] = useState(false);
 
@@ -49,7 +53,7 @@ const Admin = () => {
     }
     try {
       const response = await axios.put(
-        "/api/v1/film/assignToTheatre",
+        `${baseUrl}/api/v1/film/assignToTheatre`,
         {
           theatreId: selectedTheatreForFilmAssign,
           filmId: selectedFilmForFilmAssign,
@@ -86,7 +90,7 @@ const Admin = () => {
 
   useEffect(() => {
     const fetchTheatres = async () => {
-      const { data } = await axios.get("/api/v1/theatre", {
+      const { data } = await axios.get(`${baseUrl}/api/v1/theatre`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -99,7 +103,7 @@ const Admin = () => {
   useEffect(() => {
     const fetchFilms = async () => {
       const { data } = await axios.get(
-        `/api/v1/film/${selectedTheatreForFilmAssign}`,
+        `${baseUrl}/api/v1/film/${selectedTheatreForFilmAssign}`,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -109,13 +113,13 @@ const Admin = () => {
 
       setFilms([...data]);
     };
-    fetchFilms();
+    selectedTheatreForFilmAssign && fetchFilms();
   }, [selectedTheatreForFilmAssign]);
 
   useEffect(() => {
     const fetchShows = async () => {
       const { data } = await axios.get(
-        `/api/v1/theatre/shows/${selectedTheatreForFilmAssign}`,
+        `${baseUrl}/api/v1/theatre/shows/${selectedTheatreForFilmAssign}`,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -125,11 +129,13 @@ const Admin = () => {
 
       setShows([...data]);
     };
-    fetchShows();
+    selectedTheatreForFilmAssign && fetchShows();
   }, [selectedTheatreForFilmAssign]);
 
   return (
-    <div>
+    <>
+      <Navbar />
+
       <Container>
         <Tabs>
           <TabList>
@@ -222,7 +228,7 @@ const Admin = () => {
           </TabPanels>
         </Tabs>
       </Container>
-    </div>
+    </>
   );
 };
 

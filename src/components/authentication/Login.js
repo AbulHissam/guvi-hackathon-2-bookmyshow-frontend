@@ -8,6 +8,10 @@ import axios from "axios";
 import { useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
+const baseUrl = process.env.REACT_APP_BASE_URL;
+
+console.log(baseUrl);
+
 function Login() {
   const navigate = useNavigate();
   const toast = useToast();
@@ -38,7 +42,7 @@ function Login() {
         },
       };
       const { data } = await axios.post(
-        "/api/v1/auth/login",
+        `${baseUrl}/api/v1/auth/login`,
         {
           email,
           password,
